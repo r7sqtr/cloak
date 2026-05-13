@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# SwiftPM
+.build/
+.swiftpm/
+Package.resolved
+*.xcodeproj/
+
+# Cloak build artifacts
+build/
+Resources/AppIcon.iconset/
+
+# Editor
+*.swp
+.vscode/
+.idea/
