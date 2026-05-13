@@ -10,6 +10,19 @@ VERSION="$1"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
+REPO="${RELEASE_REPO:-r7sqtr/cloak}"
+EXPECTED_USER="${RELEASE_USER:-r7sqtr}"
+
+ACTIVE_USER="$(gh auth status 2>&1 | awk '/Active account: true/{found=1} found && /Logged in to github.com account/{print $7; exit}')"
+if [ -z "$ACTIVE_USER" ]; then
+  ACTIVE_USER="$(gh api user --jq .login 2>/dev/null || echo unknown)"
+fi
+if [ "$ACTIVE_USER" != "$EXPECTED_USER" ]; then
+  echo "gh active account is '$ACTIVE_USER', expected '$EXPECTED_USER'." >&2
+  echo "Run: gh auth switch --user $EXPECTED_USER" >&2
+  exit 1
+fi
+
 if [ -n "$(git status --porcelain)" ]; then
   echo "Working tree is not clean. Commit or stash changes first." >&2
   git status --short
@@ -51,6 +64,7 @@ Built from commit \`$(git rev-parse --short HEAD)\`.
 EOF
 
 gh release create "$VERSION" "$ZIP" \
+  --repo "$REPO" \
   --title "$VERSION" \
   --notes-file "$NOTES_FILE"
 

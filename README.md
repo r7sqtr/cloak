@@ -103,4 +103,4 @@ bash scripts/release.sh v1.0.0
 
 ## ライセンス
 
-未設定 (適宜追加してください)
+[MIT License](./LICENSE) — Copyright (c) 2026 r7sqtr
