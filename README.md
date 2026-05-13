@@ -2,7 +2,18 @@
 
 macOS の画面右上 (など) に常駐するデジタルクロック。フルスクリーンアプリの上にも表示され、クリックは下のアプリに透過。フォント・カラー・配置などをカスタマイズでき、ディスプレイごとに表示/位置を変えることもできる。
 
-## 必要環境
+## インストール (ビルド済みバイナリ)
+
+1. [Releases](../../releases) ページから最新の `Cloak-vX.Y.Z.zip` をダウンロードして解凍。
+2. `Cloak.app` を `/Applications` に移動。
+3. 初回起動時に Gatekeeper の警告が出ます (ad-hoc 署名のため)。次のいずれかで回避してください:
+   - `Cloak.app` を **右クリック → 開く** → ダイアログで確認
+   - もしくはターミナルで:
+     ```bash
+     xattr -dr com.apple.quarantine /Applications/Cloak.app
+     ```
+
+## 必要環境 (ソースからビルドする場合)
 
 - macOS 13 以上
 - Swift 6.0 以上 (Command Line Tools `xcode-select --install` で OK、フル Xcode は不要)
@@ -63,6 +74,20 @@ open ./build/Cloak.app
 bash scripts/make-icon.sh
 bash scripts/build-app.sh
 ```
+
+## リリース (メンテナ向け)
+
+`gh` CLI で認証済みであることを確認した上で:
+
+```bash
+bash scripts/release.sh v1.0.0
+```
+
+- 作業ツリーがクリーンで、指定タグが未使用であることをチェック
+- `scripts/build-app.sh` で `Cloak.app` をビルド
+- `ditto` で `build/Cloak-v1.0.0.zip` を作成 (ad-hoc 署名と拡張属性を保持)
+- 注釈付きタグを作成して origin に push
+- `gh release create` でインストール手順入りの Release を作成し、zip を添付
 
 ## アーキテクチャ
 
